@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Note;
-
+use App\Http\Requests\NoteRequest;
 class NoteController extends Controller
 {
     /**
@@ -23,12 +23,8 @@ class NoteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NoteRequest $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required'
-        ]);
         return Note::create($request->all());
     }
 
@@ -50,7 +46,7 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(NoteRequest $request, $id)
     {
         $note = Note::find($id);
         $note->update($request->all());

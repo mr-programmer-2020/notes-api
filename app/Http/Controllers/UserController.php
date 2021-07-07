@@ -7,21 +7,18 @@ use Illuminate\Http\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
-    public function register(Request $request)
+    public function register(UserRequest $request)
     {
-        $fields = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
-        ]);
+        
 
         $user = User::create([
-            'name' => $fields['name'],
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password'])
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
         ]);
 
         $token = $user->createToken('myapptoken')->plainTextToken;
@@ -35,17 +32,14 @@ class UserController extends Controller
  
     }
 
-    public function login(Request $request) {
-        $fields = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string'
-        ]);
+    public function login(UserRequest $request) {
+       
 
         // Check email
-        $user = User::where('email', $fields['email'])->first();
+        $user = User::where('email', $request->email)->first();
 
         // Check password
-        if(!$user || !Hash::check($fields['password'], $user->password)) {
+        if(!$user || !Hash::check($request->password, $user->password)) {
             return response([
                 'message' => 'Bad creds'
             ], 401);
@@ -62,7 +56,7 @@ class UserController extends Controller
     }
     
 
-    public function logout(Request $request)
+    public function logout()
     {
         auth()->user()->tokens()->delete();
         return [
