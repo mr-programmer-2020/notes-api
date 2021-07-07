@@ -27,7 +27,7 @@ Route::post("login",[UserController::class,'login']);
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('notes',NoteController::class);
-    Route::get('email',[NoteController::class,'getUserEmail']);
+    Route::get('email/{id}',[NoteController::class,'getUserEmail']);
     Route::post("logout",[UserController::class,'logout']); 
 });
 

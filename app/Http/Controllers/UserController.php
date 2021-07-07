@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use DB;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -28,7 +29,7 @@ class UserController extends Controller
             'token' => $token
         ];
 
-        return response($response,201);
+        return new UserResource($response);
  
     }
 
@@ -52,7 +53,7 @@ class UserController extends Controller
             'token' => $token
         ];
 
-        return response($response, 201);
+        return new UserResource($response);
     }
     
 
@@ -68,7 +69,8 @@ class UserController extends Controller
     public function getUserEmail($id)
     {
         $result = DB::Table('users')->select('email')->where('id',$id)->get();
-        return $result;
+        
+        return new UserResource($result);
     }
 
 
